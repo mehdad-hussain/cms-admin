@@ -1,0 +1,68 @@
+<aside class="h-full bg-page-color-2">
+  <div #bigSidebar class="flex flex-col h-full lg:block">
+    <!-- section: toggle button & link -->
+    <div
+      class="flex items-center justify-around flex-shrink-0 transition-all duration-500 ease-in-out relative"
+      [ngClass]="isSidebarOpen ? 'h-20' : 'h-14 border-b border-b-secondary'"
+    >
+      <p
+        #pTag
+        class="text-lg transition-all duration-300 delay-75 ease-in-out pr-3"
+        [ngClass]="isSidebarOpen ? 'opacity-100' : 'opacity-0'"
+      >
+        CMS Admin
+      </p>
+      <button
+        (click)="toggleSidebar()"
+        class="w-10 h-10 right-2 absolute"
+        [ngClass]="isSidebarOpen ? 'pl-0' : 'pl-1.5'"
+      >
+        <svg-icon
+          src="assets/icons/bar-chart.svg"
+          [applyClass]="true"
+          [class]="'w-8 h-8'"
+        ></svg-icon>
+      </button>
+    </div>
+
+    <!-- section: nav list -->
+    <nav class="flex-grow overflow-y-auto">
+      <ul
+        class="flex flex-col space-y-4 text-primary transition-all duration-500 ease-in-out"
+        [ngClass]="isSidebarOpen ? 'py-4' : 'justify-center'"
+        *ngFor="let item of pageList"
+      >
+        <li
+          class="cursor-pointer"
+          [ngClass]="
+            isSidebarOpen ? 'px-5' : 'border-b border-b-secondary h-14'
+          "
+          [routerLink]="[item.link]"
+          routerLinkActive="router-link-active"
+        >
+          <div
+            class="flex flex-row items-center h-8"
+            [ngClass]="isSidebarOpen ? '' : 'justify-center h-full'"
+          >
+            <div
+              class="flex space-x-6 overflow-x-hidden"
+              [ngClass]="isSidebarOpen ? 'ml-4' : ''"
+            >
+              <svg-icon
+                [src]="'assets/icons/' + item?.icon"
+                [applyClass]="true"
+                [class]="'w-6 h-6 stroke-primary'"
+              ></svg-icon>
+              <span
+                #spanList
+                class="font-semibold"
+                [ngClass]="isSidebarOpen ? 'lg:block ' : 'hidden'"
+                >{{ item.name }}</span
+              >
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>

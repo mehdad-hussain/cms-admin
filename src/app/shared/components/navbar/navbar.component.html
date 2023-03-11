@@ -1,0 +1,91 @@
+<header>
+  <nav class="h-[69px]">
+    <!-- make a grid with 3 columns for logo, time & settings icon button -->
+    <div class="grid grid-cols-12 items-center h-full">
+      <!-- section: logo -->
+      <div
+        class="place-self-center w-full lg:col-span-2 col-span-6 mdB:col-span-4 flex items-center space-x-10 justify-center"
+      >
+        <svg-icon
+          [src]="'assets/icons/arrow-left.svg'"
+          [applyClass]="true"
+          [class]="'w-6 h-6 stroke-tertiary'"
+        ></svg-icon>
+
+        <div class="mdB:w-1/3 w-1/2">
+          <a class="navbar-brand" href="/"> CMS ADMIN </a>
+        </div>
+      </div>
+
+      <!-- section: date & time -->
+      <div class="col-span-6 flex-col hidden lg:flex">
+        <p class="flex items-center text-lg font-bold">
+          <span class="text-primary">Time:</span>
+          <span class="text-primary">{{ currentTime }}</span>
+        </p>
+        <p class="flex text-sm font-semibold">
+          <span class="text-primary">Date:</span>
+          <span class="text-primary">{{ currentDate }}</span>
+        </p>
+      </div>
+
+      <!-- section: dive to make space for mobile view < 1000 -->
+      <div class="col-span-2 block lg:hidden mdB:col-span-4"></div>
+
+      <!-- section: settings button & profile menu -->
+      <div class="col-span-4 space-x-2 justify-self-end mr-20 hidden lg:flex">
+        <!-- make a square button -->
+        <button
+          class="flex items-center justify-center w-10 h-10 rounded-[6px] bg-tertiary"
+        >
+          <svg-icon
+            [src]="'assets/icons/gear.svg'"
+            [applyClass]="true"
+            [class]="'w-5 h-5 stroke-tertiary fill-tertiary'"
+          ></svg-icon>
+        </button>
+
+        <!-- section: profile -->
+        <div class="flex space-x-2">
+          <button
+            class="flex items-center justify-center w-10 h-10 rounded-[6px] bg-tertiary"
+          >
+            <svg-icon
+              [src]="'assets/icons/user.svg'"
+              [applyClass]="true"
+              [class]="'w-5 h-5 stroke-tertiary fill-tertiary'"
+            ></svg-icon>
+          </button>
+
+          <div class="flex flex-col h-8 leading-5">
+            <p class="text-tertiary font-bold">
+              <span>Name:&nbsp;</span><span>Jashim Uddin</span>
+            </p>
+            <p class="font-extralight text-tertiary">
+              <span>Designation:&nbsp;</span><span>Manger</span>
+            </p>
+          </div>
+
+          <button
+            class="flex items-center justify-center w-10 h-10 rounded-[6px]"
+          >
+            <svg-icon
+              [src]="'assets/icons/chevron-down.svg'"
+              [applyClass]="true"
+              [class]="'w-6 h-6 fill-white'"
+            ></svg-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- section: settings button for mobile -->
+      <div class="col-span-4 justify-self-end mr-4 lg:hidden">
+        <svg-icon
+          src="assets/icons/hamburger.svg"
+          [applyClass]="true"
+          [class]="'w-8 h-8 stroke-white fill-white'"
+        ></svg-icon>
+      </div>
+    </div>
+  </nav>
+</header>

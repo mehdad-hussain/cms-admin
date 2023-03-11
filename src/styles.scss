@@ -1,1 +1,115 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~@swimlane/ngx-datatable/index.css";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "node_modules/@swimlane/ngx-datatable/themes/material.scss";
+@import "node_modules/@swimlane/ngx-datatable/themes/dark.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// @import "node_modules/~@swimlane/ngx-datatable/index.css";
+
+@layer base {
+  h1 {
+    @apply text-5xl;
+  }
+  h2 {
+    @apply text-4xl;
+  }
+  h3 {
+    @apply text-3xl;
+  }
+  h4 {
+    @apply text-2xl;
+  }
+  h5 {
+    @apply text-xl;
+  }
+  h6 {
+    @apply text-lg;
+  }
+  a {
+    @apply cursor-pointer no-underline;
+  }
+}
+
+body {
+  font-family: "Public Sans", sans-serif;
+}
+
+.ngx-datatable {
+  .datatable-header {
+    width: auto !important;
+    @apply bg-title-bar-color p-0 text-tertiary flex items-center justify-center px-1;
+  }
+
+  .datatable-header-inner {
+    @apply h-[30px] py-1;
+  }
+
+  .datatable-body {
+    width: auto !important;
+    .datatable-body-row > div {
+      @apply text-tertiary hover:text-primary hover:bg-tertiary border-b-[.1px] border-b-gray-400 px-0 text-sm;
+    }
+  }
+
+  .datatable-body-cell {
+    @apply px-1 py-0.5;
+  }
+
+  .resize-handle,
+  .resize-handle--not-resizable {
+    background-color: gray !important;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px !important;
+    padding: 0 1px !important;
+    background-color: red;
+    visibility: visible !important;
+    margin-right: 8px !important;
+  }
+
+  datatable-header-cell:last-child {
+    .resize-handle,
+    .resize-handle--not-resizable {
+      visibility: hidden !important;
+    }
+  }
+
+  .datatable-footer {
+    .datatable-pager {
+      @apply w-max;
+
+      .pager {
+        @apply w-full flex items-center p-0 space-x-2.5;
+
+        li {
+          @apply bg-title-bar-color rounded-sm w-7 h-7;
+          a {
+            @apply w-full h-full py-1 text-center text-tertiary;
+          }
+        }
+
+        .active {
+          @apply bg-tertiary;
+          a {
+            @apply text-black;
+          }
+        }
+      }
+    }
+  }
+
+  .page-count {
+    @apply text-tertiary text-sm;
+  }
+}

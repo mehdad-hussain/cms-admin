@@ -1,0 +1,35 @@
+.card-container {
+  @apply container flex justify-end items-start;
+}
+
+.card {
+  @apply flex flex-col gap-4 justify-center rounded-2xl lg:items-center lg:w-[546px] lg:bg-page-color-2 lg:px-7 lg:pt-12 lg:pb-14 mt-20 lg:border lg:border-primary-btn border-none bg-transparent px-0 py-0 w-[100%] items-start;
+}
+
+.card-title {
+  @apply font-semibold mb-8 text-tertiary lg:text-primary lg:text-4xl text-xl md:text-2xl;
+}
+
+.form {
+  @apply w-full flex flex-col gap-6 lg:gap-4 h-full;
+}
+
+.input-container {
+  @apply w-full relative flex items-center;
+}
+
+.input {
+  @apply w-full outline-none lg:border-none shadow-sm focus:ring-1 focus:ring-page-color-1 bg-transparent lg:bg-tertiary placeholder:text-tertiary lg:placeholder:text-gray-500 border-0 border-b border-b-tertiary focus:border-b-page-color-2 placeholder:text-sm text-white lg:text-primary;
+}
+
+.forgot-text {
+  @apply underline font-normal text-tertiary lg:text-warning-btn text-xs lg:text-sm self-end cursor-pointer;
+}
+
+.btn-container {
+  @apply flex lg:justify-end justify-center w-full lg:mt-16 mt-20;
+}
+
+.submit-btn {
+  @apply bg-primary-btn text-tertiary px-14 py-2 text-xl w-full lg:w-max;
+}

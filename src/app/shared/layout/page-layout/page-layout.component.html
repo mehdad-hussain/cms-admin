@@ -1,0 +1,49 @@
+<section class="grid grid-rows-[69px_1fr] w-full h-screen bg-page-color-1">
+  <!-- section: nav bar -->
+  <div class="col-span-12 bg-header-color">
+    <app-navbar></app-navbar>
+  </div>
+  <div class="flex gap-2 col-span-12">
+    <!-- section: side bar -->
+    <div
+      #sidebar
+      *ngIf="showSidebar"
+      class="transition-all duration-500 ease-in-out"
+      [ngClass]="
+        isSidebarOpen
+          ? 'hidden lg:block space-x-5 w-56'
+          : 'w-[52px] hidden lg:block'
+      "
+    >
+      <app-sidebar (sidebar)="checkSidebarState($event)"></app-sidebar>
+    </div>
+
+    <!-- section: main page content -->
+    <main #main class="p-4 flex-1 lgM:w-screen lg:w-[calc(100vw-240px)]">
+      <div
+        *ngIf="showCardTable"
+        class="flex flex-col gap-4 justify-center items-center"
+      >
+        <!-- section: page title -->
+        <h3 class="text-2xl font-semibold place-self-start text-tertiary">
+          {{ pageTitle }}
+        </h3>
+
+        <!-- section: filter card -->
+        <div
+          class="bg-page-color-2 shadow rounded w-full p-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3"
+        >
+          <ng-content select="[cardElements]"></ng-content>
+        </div>
+
+        <!-- section: data table -->
+        <ng-content select="[dataTable]"></ng-content>
+      </div>
+
+      <ng-content></ng-content>
+    </main>
+  </div>
+  <!-- <div class="col-span-12 bg-red-300">
+    <app-footer></app-footer>
+  </div> -->
+</section>
