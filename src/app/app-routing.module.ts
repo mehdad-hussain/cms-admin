@@ -14,6 +14,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
+  {
+    path: 'collection',
+    loadChildren: () =>
+      import('./collection/collection.module').then((m) => m.CollectionModule),
+  },
 
   // make a not found page and redirect to it if the path is not found in the routes array
   { path: '**', component: NotFoundComponent },

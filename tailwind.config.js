@@ -84,7 +84,7 @@ module.exports = {
       },
       colors: {
         // *  added variables */
-        "page-color-1": "#576F72",
+        "page-color-1": "#fff",
         "page-color-2": "#F0EBE3",
         "header-color": "#E4DCCF",
         "title-bar-color": "#7D9D9C",
@@ -92,7 +92,7 @@ module.exports = {
         "warning-btn": "#9B2D38",
         primary: "#343A40",
         secondary: "#B8B6B2",
-        tertiary: "#FFFFFF",
+        tertiary: "#E4vfbeF",
       },
     },
   },

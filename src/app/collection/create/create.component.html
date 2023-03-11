@@ -1,0 +1,130 @@
+<app-page-layout
+  pageTitle="Create Collection"
+  [showCard]="false"
+  [showTable]="false"
+>
+  <button
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    (click)="openModal()"
+  >
+    Create Field
+  </button>
+
+  <!-- section: field selection modal  -->
+  <app-modal-container [modalID]="configModal">
+    <h3 title>Configuration</h3>
+
+    <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
+      <ng-container *ngFor="let collectionType of collectionTypes">
+        <div
+          class="col-span-3 border-2 border-gray-300 rounded-md py-4 text-center cursor-pointer shadow-sm hover:bg-slate-300 focus:outline focus:outline-slate-600"
+          (click)="selectCollectionType(collectionType.name)"
+        >
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ collectionType.name }}
+          </h3>
+        </div>
+      </ng-container>
+    </div>
+  </app-modal-container>
+
+  <!-- section: field type settings -->
+  <app-modal-container [modalID]="'typeSettingModal'">
+    <h3 title>Add {{ selectedType }} Field</h3>
+
+    <!-- make a form with Title, PlaceHolder, Validators multi select  -->
+    <form
+      class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
+      [formGroup]="createFrom"
+      autocomplete="off"
+    >
+      <div class="col-span-6">
+        <app-input
+          [label]="'Title'"
+          [placeHolder]="'Title'"
+          [control]="title"
+          [inputType]="'text'"
+          labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+        ></app-input>
+      </div>
+
+      <div class="col-span-6">
+        <label
+          for="placeholder"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Placeholder
+        </label>
+        <div class="mt-1">
+          <input
+            type="text"
+            name="placeholder"
+            id="placeholder"
+            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            placeholder="Placeholder"
+            formControlName="placeholder"
+          />
+        </div>
+      </div>
+
+      <div class="col-span-6">
+        <label for="validators" class="block text-sm font-medium text-gray-700">
+          Validators
+        </label>
+        <div class="mt-1">
+          <select
+            id="validators"
+            name="validators"
+            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            multiple
+            formControlName="validators"
+          >
+            <option value="required">Required</option>
+            <option value="minLength">Min Length</option>
+            <option value="maxLength">Max Length</option>
+            <option value="min">Min</option>
+            <option value="max">Max</option>
+            <option value="pattern">Pattern</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- make a submit button -->
+      <div class="col-span-6">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="submit"
+          (click)="createField()"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </app-modal-container>
+
+  <!-- section: dynamic form -->
+
+  <div [formGroup]="form">
+    <label [attr.for]="field.key">{{ field.label }}</label>
+
+    <div [ngSwitch]="field.controlType">
+      <input
+        *ngSwitchCase="'textbox'"
+        [formControlName]="field.key"
+        [id]="field.key"
+        [type]="field.type"
+      />
+
+      <select
+        [id]="field.key"
+        *ngSwitchCase="'dropdown'"
+        [formControlName]="field.key"
+      >
+        <option *ngFor="let opt of field.options" [value]="opt.key">
+          {{ opt.value }}
+        </option>
+      </select>
+    </div>
+  </div>
+</app-page-layout>

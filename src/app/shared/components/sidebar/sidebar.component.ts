@@ -32,27 +32,7 @@ export class SidebarComponent implements OnInit {
     {
       name: 'Create Collection',
       icon: 'dashboard.svg',
-      link: '/create-collection',
-    },
-    {
-      name: 'Stocks',
-      icon: 'dashboard.svg',
-      link: '/stocks',
-    },
-    {
-      name: 'Orders',
-      icon: 'dashboard.svg',
-      link: '/orders',
-    },
-    {
-      name: 'POS Sell',
-      icon: 'dashboard.svg',
-      link: '/sell',
-    },
-    {
-      name: 'POS Return',
-      icon: 'return.svg',
-      link: '/return',
+      link: '/collection/create',
     },
   ];
 

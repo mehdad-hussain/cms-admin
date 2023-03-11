@@ -25,7 +25,7 @@ export class ModalService {
 
   constructor() {}
 
-  register(id: string, component: any) {
+  register(id: string, component?: any) {
     this.modals.push({
       id,
       visible: false,

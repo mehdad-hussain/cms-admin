@@ -4,11 +4,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 // prettier-ignore
-import { SidebarComponent, NavbarComponent, FooterComponent,LoginCardComponent,NotFoundComponent } from './components';
+import { SidebarComponent, NavbarComponent, FooterComponent,LoginCardComponent,NotFoundComponent, CheckboxComponent, InputComponent, RadioBtnComponent, ModalContainerComponent } from './components';
 // prettier-ignore
 import { ClickOutsideDirective } from './directives';
 // prettier-ignore
@@ -23,6 +23,10 @@ import { PageLayoutComponent } from './layout';
     FooterComponent,
     LoginCardComponent,
     NotFoundComponent,
+    CheckboxComponent,
+    InputComponent,
+    RadioBtnComponent,
+    ModalContainerComponent,
   ],
   imports: [
     HttpClientModule,
@@ -32,6 +36,7 @@ import { PageLayoutComponent } from './layout';
     NgSelectModule,
     FormsModule,
     NgxDatatableModule,
+    ReactiveFormsModule,
   ],
   exports: [
     PageLayoutComponent,
@@ -41,6 +46,10 @@ import { PageLayoutComponent } from './layout';
     NgxDatatableModule,
     LoginCardComponent,
     NotFoundComponent,
+    CheckboxComponent,
+    InputComponent,
+    RadioBtnComponent,
+    ModalContainerComponent,
   ],
 })
 export class SharedModule {}

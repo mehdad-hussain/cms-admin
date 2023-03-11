@@ -7,7 +7,8 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 })
 export class PageLayoutComponent implements OnInit {
   @Input() pageTitle = 'Page Title';
-  @Input() showCardTable: boolean = true;
+  @Input() showTable: boolean = true;
+  @Input() showCard: boolean = true;
   @Input() showSidebar: boolean = true;
   @ViewChild('sidebar') sidebar!: ElementRef;
 
