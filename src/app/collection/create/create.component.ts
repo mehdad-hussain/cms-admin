@@ -7,21 +7,18 @@ import {
 } from '@angular/forms';
 
 import { IPage, ModalService } from '@core';
-import { FieldBase } from './field-base';
 
+import { QuestionService } from './question.service';
+import { QuestionBase } from './question-base';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
-  @Input() field!: FieldBase<string>;
-  @Input() form!: FormGroup;
-  get isValid() {
-    return this.form.controls[this.field.key].valid;
-  }
-
-  public createFrom!: FormGroup;
+  public createForm!: FormGroup;
+  public newForm!: FormGroup;
   selectedCar!: 1;
 
   configModal = 'configModal';
@@ -139,18 +136,35 @@ export class CreateComponent implements OnInit {
 
   data: any = [];
 
-  constructor(private fb: FormBuilder, public modal: ModalService) {}
+  constructor(
+    private fb: FormBuilder,
+    public modal: ModalService,
+    service: QuestionService
+  ) {
+    this.questions$ = service.getQuestions();
+  }
 
   ngOnInit() {
     this.setPage({ offset: 0 });
 
-    this.createFrom = this.fb.group({
+    this.createForm = this.fb.group({
       title: ['', Validators.required],
       placeholder: [''],
-      validators: [[]],
+      required: [false],
+      maxLength: [null],
+      minLength: [null],
+      maxValue: [null],
+      minValue: [null],
+      pattern: [''],
+      patternMessage: [''],
+      email: [false],
     });
 
     this.modal.register(this.configModal);
+    this.newForm = this.toFormGroup(this.newField);
+
+    console.log('newForm', this.newForm);
+    console.log('createForm', this.createForm);
   }
 
   ngOnDestroy(): void {
@@ -180,12 +194,104 @@ export class CreateComponent implements OnInit {
   }
 
   createField() {
-    if (this.title.invalid) {
-      return;
+    // if (this.title.invalid) {
+    //   return;
+    // }
+
+    if (this.createForm.invalid) {
+      console.log('invalid');
+      console.log(this.createForm.hasError('required', ['multiple']));
     }
 
     console.log(this.title.value);
 
-    console.log(this.createFrom.value);
+    console.log(this.createForm.value);
+  }
+
+  // section: dynamic form
+
+  questions$: Observable<QuestionBase<any>[]>;
+
+  toFormGroup(fields: any[]) {
+    const group: any = {};
+
+    let validators: any = [];
+
+    fields.forEach((field) => {
+      if (field.validators && field.validators.length > 0) {
+        validators = [];
+        field.validators.forEach((v: any) => {
+          if (v.name === 'required') {
+            validators.push(Validators.required);
+          } else if (v.name === 'minLength') {
+            validators.push(Validators.minLength(v.value));
+          } else {
+            validators.push([]);
+          }
+        });
+      } else {
+        validators = [];
+      }
+
+      console.log('toFormGroup', field.control, field.value, validators);
+
+      group[field.control] = new FormControl(field.value || null, validators);
+    });
+
+    return new FormGroup(group);
+  }
+
+  newField = [
+    {
+      control: 'name',
+      label: 'Name',
+      type: 'text',
+      options: [],
+      validators: [
+        {
+          name: 'required',
+          message: 'Name is required',
+        },
+        {
+          name: 'minLength',
+          message: 'Name must be at least 3 characters long',
+          value: 3,
+        },
+      ],
+    },
+    {
+      control: 'cars',
+      label: 'Cars',
+      type: 'select',
+      options: [
+        { id: 1, name: 'Volvo' },
+        { id: 2, name: 'Saab' },
+      ],
+      validators: [
+        {
+          name: 'required',
+          message: 'Name is required',
+        },
+      ],
+    },
+  ];
+
+  onSubmit() {
+    console.log(
+      'cars error:',
+      this.newForm.hasError('required', ['cars']),
+      this.newForm.controls['cars'].errors
+    );
+
+    if (this.newForm.invalid) {
+      console.log('invalid');
+      return;
+    }
+    console.log(this.newForm.value);
+  }
+
+  openTab = 1;
+  toggleTabs($tabNumber: number) {
+    this.openTab = $tabNumber;
   }
 }

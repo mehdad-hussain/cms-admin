@@ -27,8 +27,8 @@ export class InputComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.control);
-    console.log(this.control.hasValidator(Validators.required));
+    // console.log(this.control);
+    // console.log(this.control.hasValidator(Validators.required));
     // console.log(this.control.get('name'));
     this.isRequired = this.control.hasValidator(Validators.required);
     if (this.showRequiredMsg) {

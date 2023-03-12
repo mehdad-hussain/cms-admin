@@ -8,12 +8,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 // prettier-ignore
-import { SidebarComponent, NavbarComponent, FooterComponent,LoginCardComponent,NotFoundComponent, CheckboxComponent, InputComponent, RadioBtnComponent, ModalContainerComponent } from './components';
+import { SidebarComponent, NavbarComponent, FooterComponent,LoginCardComponent,NotFoundComponent, CheckboxComponent, InputComponent, RadioBtnComponent, ModalContainerComponent, } from './components';
 // prettier-ignore
 import { ClickOutsideDirective } from './directives';
 // prettier-ignore
 import { SplitPipe, SumPipe, TypeOfPipe, ReversePipe, LengthPipe, SentenceCasePipe, SlugifyPipe, SomePipe, SqrtPipe, PowPipe, PctPipe, MinPipe, MaxPipe, MapPipe, LastPipe, JoinPipe, FirstPipe, FillPipe, EveryPipe, CopyWithinPipe, CombinePipe, CharAtPipe, CamelCasePipe, ConcatPipe, InterpolatePipe, PascalCasePipe, RepeatPipe, TrimPipe, TrimLeftPipe, TrimRightPipe, TruncatePipe, AvgPipe, AbsPipe, CeilPipe, FloorPipe, RoundPipe, JoinObjectValuesPipe,SplitPascalCasePipe , NumberToWordPipe } from './pipes';
-import { PageLayoutComponent } from './layout';
+import { PageLayoutComponent, DynamicFormLayoutComponent } from './layout';
 
 @NgModule({
   declarations: [
@@ -27,6 +27,7 @@ import { PageLayoutComponent } from './layout';
     InputComponent,
     RadioBtnComponent,
     ModalContainerComponent,
+    DynamicFormLayoutComponent,
   ],
   imports: [
     HttpClientModule,
@@ -50,6 +51,7 @@ import { PageLayoutComponent } from './layout';
     InputComponent,
     RadioBtnComponent,
     ModalContainerComponent,
+    DynamicFormLayoutComponent,
   ],
 })
 export class SharedModule {}

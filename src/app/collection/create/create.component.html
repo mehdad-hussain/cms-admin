@@ -7,7 +7,7 @@
     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
     (click)="openModal()"
   >
-    Create Field
+    Add Field
   </button>
 
   <!-- section: field selection modal  -->
@@ -33,64 +33,246 @@
     <h3 title>Add {{ selectedType }} Field</h3>
 
     <!-- make a form with Title, PlaceHolder, Validators multi select  -->
-    <form
-      class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
-      [formGroup]="createFrom"
-      autocomplete="off"
-    >
-      <div class="col-span-6">
-        <app-input
-          [label]="'Title'"
-          [placeHolder]="'Title'"
-          [control]="title"
-          [inputType]="'text'"
-          labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
-        ></app-input>
-      </div>
+    <!-- class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3" -->
+    <form [formGroup]="createForm" autocomplete="off">
+      <div class="flex flex-wrap">
+        <div class="w-full">
+          <!-- section: tab header -->
+          <ul class="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
+            <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <a
+                class="text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal"
+                (click)="toggleTabs(1)"
+                [ngClass]="{
+                  'text-lime-600 bg-white': openTab !== 1,
+                  'text-white bg-lime-600': openTab === 1
+                }"
+              >
+                General
+              </a>
+            </li>
+            <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <a
+                class="text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal"
+                (click)="toggleTabs(2)"
+                [ngClass]="{
+                  'text-lime-600 bg-white': openTab !== 2,
+                  'text-white bg-lime-600': openTab === 2
+                }"
+              >
+                Validators
+              </a>
+            </li>
+          </ul>
 
-      <div class="col-span-6">
-        <label
-          for="placeholder"
-          class="block text-sm font-medium text-gray-700"
-        >
-          Placeholder
-        </label>
-        <div class="mt-1">
-          <input
-            type="text"
-            name="placeholder"
-            id="placeholder"
-            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            placeholder="Placeholder"
-            formControlName="placeholder"
-          />
-        </div>
-      </div>
-
-      <div class="col-span-6">
-        <label for="validators" class="block text-sm font-medium text-gray-700">
-          Validators
-        </label>
-        <div class="mt-1">
-          <select
-            id="validators"
-            name="validators"
-            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            multiple
-            formControlName="validators"
+          <!-- section: tab body -->
+          <div
+            class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded"
           >
-            <option value="required">Required</option>
-            <option value="minLength">Min Length</option>
-            <option value="maxLength">Max Length</option>
-            <option value="min">Min</option>
-            <option value="max">Max</option>
-            <option value="pattern">Pattern</option>
-          </select>
+            <div class="px-4 py-5 flex-auto">
+              <div>
+                <div
+                  class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
+                  [ngClass]="{ hidden: openTab !== 1, block: openTab === 1 }"
+                >
+                  <div class="col-span-12 md:col-span-6">
+                    <app-input
+                      [label]="'Title'"
+                      [placeHolder]="'Title'"
+                      [control]="title"
+                      [inputType]="'text'"
+                      labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+                    ></app-input>
+                  </div>
+
+                  <div class="col-span-12 md:col-span-6">
+                    <label
+                      for="placeholder"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Placeholder
+                    </label>
+                    <div class="mt-1">
+                      <input
+                        type="text"
+                        name="placeholder"
+                        id="placeholder"
+                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        placeholder="Placeholder"
+                        formControlName="placeholder"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
+                  [ngClass]="{ hidden: openTab !== 2, block: openTab === 2 }"
+                >
+                  <!-- section: required -->
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <input
+                      type="checkbox"
+                      formControlName="required"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 ring-1 border-gray-300 rounded-sm"
+                    />
+                    <label
+                      for="required"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      {{
+                        createForm.controls["required"].value
+                          ? "Required"
+                          : "Not Required"
+                      }}
+                    </label>
+                  </div>
+
+                  <div></div>
+
+                  <hr class="col-span-12" />
+                  <!-- section: min length -->
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Max Length
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="maxLength"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: min length -->
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Min Length
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="minLength"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: max value -->
+
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Max Value
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="maxValue"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: min value -->
+
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Min Value
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="minValue"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: pattern -->
+
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Pattern
+                    </label>
+                    <input
+                      type="text"
+                      formControlName="pattern"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: pattern message -->
+
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <label
+                      for=""
+                      class="inline-block text-sm font-medium text-gray-700"
+                    >
+                      Pattern Message
+                    </label>
+                    <input
+                      type="text"
+                      formControlName="patternMessage"
+                      min="0"
+                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
+                    />
+                  </div>
+
+                  <!-- section: email -->
+
+                  <div
+                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
+                  >
+                    <input
+                      type="checkbox"
+                      formControlName="email"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 ring-1 border-gray-300 rounded-sm"
+                    />
+                    <label
+                      for="email"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      {{
+                        createForm.controls["email"].value
+                          ? "Email"
+                          : "Not Email"
+                      }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- make a submit button -->
       <div class="col-span-6">
         <button
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -103,28 +285,69 @@
     </form>
   </app-modal-container>
 
-  <!-- section: dynamic form -->
+  <!-- section: experimenting -->
 
-  <div [formGroup]="form">
-    <label [attr.for]="field.key">{{ field.label }}</label>
+  <form [formGroup]="newForm">
+    <div *ngFor="let field of newField">
+      <label [attr.for]="field.control">{{ field.label }}</label>
 
-    <div [ngSwitch]="field.controlType">
-      <input
-        *ngSwitchCase="'textbox'"
-        [formControlName]="field.key"
-        [id]="field.key"
-        [type]="field.type"
-      />
+      <div [ngSwitch]="field.type">
+        <input
+          *ngSwitchCase="'text'"
+          [formControlName]="field.control"
+          [id]="field.control"
+          [type]="field.type"
+        />
 
-      <select
-        [id]="field.key"
-        *ngSwitchCase="'dropdown'"
-        [formControlName]="field.key"
-      >
-        <option *ngFor="let opt of field.options" [value]="opt.key">
-          {{ opt.value }}
-        </option>
-      </select>
+        <ng-select
+          *ngSwitchCase="'select'"
+          [items]="field.options"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="false"
+          [multiple]="true"
+          groupBy="name"
+          [searchable]="true"
+          placeholder="Select cars"
+          [formControlName]="field.control"
+        >
+        </ng-select>
+      </div>
     </div>
-  </div>
+    <div class="col-span-6">
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        type="submit"
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
 </app-page-layout>
+
+<!-- <div>
+    <h2>Job Application for Heroes</h2>
+    <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
+  </div> -->
+
+<!-- <app-input
+    [label]="'Title'"
+    [placeHolder]="'Title'"
+    [control]="title"
+    [inputType]="'text'"
+    labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+    inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+  ></app-input>
+
+  <ng-select
+    [items]="collectionTypes"
+    bindLabel="name"
+    bindValue="key"
+    [groupBy]="'name'"
+    [multiple]="true"
+    [clearable]="false"
+    [searchable]="true"
+    placeholder="Select collection type"
+  >
+  </ng-select> -->
