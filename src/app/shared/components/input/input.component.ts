@@ -9,8 +9,8 @@ import { FormControl, Validators } from '@angular/forms';
 export class InputComponent implements OnInit {
   @Input() control: FormControl = new FormControl();
   @Input() inputType: string = 'text';
-  @Input() placeHolder: string = '';
-  @Input() label: string = '';
+  @Input() placeHolder: string | undefined = '';
+  @Input() label: string | undefined = '';
   @Input() showRequiredMsg: boolean = false;
 
   // section: input for css classes
@@ -30,7 +30,8 @@ export class InputComponent implements OnInit {
     // console.log(this.control);
     // console.log(this.control.hasValidator(Validators.required));
     // console.log(this.control.get('name'));
-    this.isRequired = this.control.hasValidator(Validators.required);
+
+    this.isRequired = this.control?.hasValidator(Validators.required);
     if (this.showRequiredMsg) {
       this.isRequired = this.control.hasValidator(Validators.required);
     }

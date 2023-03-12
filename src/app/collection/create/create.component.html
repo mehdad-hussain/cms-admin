@@ -71,6 +71,7 @@
           >
             <div class="px-4 py-5 flex-auto">
               <div>
+                <!-- section: general  -->
                 <div
                   class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
                   [ngClass]="{ hidden: openTab !== 1, block: openTab === 1 }"
@@ -105,6 +106,8 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- section: validators -->
                 <div
                   class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
                   [ngClass]="{ hidden: openTab !== 2, block: openTab === 2 }"
@@ -133,10 +136,8 @@
                   <div></div>
 
                   <hr class="col-span-12" />
-                  <!-- section: min length -->
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <!-- section: max length -->
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -152,9 +153,7 @@
                   </div>
 
                   <!-- section: min length -->
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -171,9 +170,7 @@
 
                   <!-- section: max value -->
 
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -190,9 +187,7 @@
 
                   <!-- section: min value -->
 
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -209,9 +204,7 @@
 
                   <!-- section: pattern -->
 
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -228,9 +221,7 @@
 
                   <!-- section: pattern message -->
 
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
+                  <div class="col-span-12 md:col-span-6">
                     <label
                       for=""
                       class="inline-block text-sm font-medium text-gray-700"
@@ -286,7 +277,7 @@
   </app-modal-container>
 
   <!-- section: experimenting -->
-
+  <!-- 
   <form [formGroup]="newForm">
     <div *ngFor="let field of newField">
       <label [attr.for]="field.control">{{ field.label }}</label>
@@ -322,6 +313,23 @@
       >
         Submit
       </button>
+    </div>
+  </form> -->
+
+  <form [formGroup]="createForm" autocomplete="off">
+    <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
+      <ng-container *ngFor="let field of finalCreateFromFields">
+        <div class="col-span-12 md:col-span-6">
+          <app-input
+            [label]="field.label"
+            [placeHolder]="field.placeholder"
+            [control]="field.control"
+            [inputType]="field.type"
+            labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+          ></app-input>
+        </div>
+      </ng-container>
     </div>
   </form>
 </app-page-layout>

@@ -1,16 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+// prettier-ignore
+import { FormBuilder, FormControl, FormGroup, Validators, } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { IPage, ModalService } from '@core';
 
 import { QuestionService } from './question.service';
 import { QuestionBase } from './question-base';
-import { Observable } from 'rxjs';
+
+// prettier-ignore
+import  {IText, 
+  ISelect,
+  ICheckbox,
+  IRadio,
+  IDate,
+  IFile,
+  INumber,
+}  from './field.model';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -18,6 +24,7 @@ import { Observable } from 'rxjs';
 })
 export class CreateComponent implements OnInit {
   public createForm!: FormGroup;
+  public thirdForm!: FormGroup;
   public newForm!: FormGroup;
   selectedCar!: 1;
 
@@ -136,6 +143,75 @@ export class CreateComponent implements OnInit {
 
   data: any = [];
 
+  openTab = 1;
+  toggleTabs($tabNumber: number) {
+    this.openTab = $tabNumber;
+  }
+
+  createdFormGroups = new Map();
+
+  createFromFields: IText[] | ICheckbox[] | IFile[] | ISelect[] = [
+    {
+      control: 'title',
+      type: 'text',
+      label: 'Title',
+      placeholder: 'Title',
+      value: '',
+      order: 1,
+      validators: [
+        {
+          name: 'required',
+          message: 'Name is required',
+        },
+        {
+          name: 'minLength',
+          message: 'Name must be at least 3 characters long',
+          value: 3,
+        },
+      ],
+    },
+    {
+      control: 'placeholder',
+      type: 'text',
+      label: 'Placeholder',
+      placeholder: 'Placeholder',
+      value: '',
+      order: 2,
+      validators: [
+        {
+          name: 'required',
+          message: 'Name is required',
+        },
+      ],
+    },
+    {
+      control: 'required',
+      type: 'checkbox',
+      label: 'Required',
+      placeholder: 'Required',
+      value: false,
+      order: 3,
+    },
+    {
+      control: 'maxLength',
+      type: 'number',
+      label: 'Max Length',
+      placeholder: 'Max Length',
+      value: null,
+      order: 4,
+    },
+    {
+      control: 'minLength',
+      type: 'number',
+      label: 'Min Length',
+      placeholder: 'Min Length',
+      value: null,
+      order: 5,
+    },
+  ];
+
+  finalCreateFromFields: IText[] | ICheckbox[] | IFile[] | ISelect[] = [];
+
   constructor(
     private fb: FormBuilder,
     public modal: ModalService,
@@ -146,6 +222,65 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.setPage({ offset: 0 });
+
+    // console.log(this.createFromFields);
+    this.thirdForm = this.toFormGroup(this.createFromFields);
+
+    this.finalCreateFromFields = [
+      {
+        control: this.createdFormGroups.get('title'),
+        type: 'text',
+        label: 'Title',
+        placeholder: 'Title',
+        value: '',
+        order: 1,
+        validators: [
+          {
+            name: 'required',
+            message: 'Name is required',
+          },
+          {
+            name: 'minLength',
+            message: 'Name must be at least 3 characters long',
+            value: 3,
+          },
+        ],
+      },
+      {
+        control: this.createdFormGroups.get('placeholder'),
+        type: 'text',
+        label: 'Placeholder',
+        placeholder: 'Placeholder',
+        value: '',
+        order: 2,
+      },
+      {
+        control: this.createdFormGroups.get('required'),
+        type: 'checkbox',
+        label: 'Required',
+        placeholder: 'Required',
+        value: false,
+        order: 3,
+      },
+      {
+        control: this.createdFormGroups.get('maxLength'),
+        type: 'number',
+        label: 'Max Length',
+        placeholder: 'Max Length',
+        value: null,
+        order: 4,
+      },
+      {
+        control: this.createdFormGroups.get('minLength'),
+        type: 'number',
+        label: 'Min Length',
+        placeholder: 'Min Length',
+        value: null,
+        order: 5,
+      },
+    ];
+
+    // console.log(this.thirdForm);
 
     this.createForm = this.fb.group({
       title: ['', Validators.required],
@@ -161,10 +296,7 @@ export class CreateComponent implements OnInit {
     });
 
     this.modal.register(this.configModal);
-    this.newForm = this.toFormGroup(this.newField);
-
-    console.log('newForm', this.newForm);
-    console.log('createForm', this.createForm);
+    // this.newForm = this.toFormGroup(this.newField);
   }
 
   ngOnDestroy(): void {
@@ -173,12 +305,12 @@ export class CreateComponent implements OnInit {
   }
 
   setPage(pageInfo: any) {
-    console.log(pageInfo);
+    // console.log(pageInfo);
     this.page.pageNumber = pageInfo.offset;
     this.page.size = 2;
     this.page.totalElements = 5;
     this.data = this.rawData.slice(this.page.pageNumber * this.page.size);
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   openModal() {
@@ -194,10 +326,6 @@ export class CreateComponent implements OnInit {
   }
 
   createField() {
-    // if (this.title.invalid) {
-    //   return;
-    // }
-
     if (this.createForm.invalid) {
       console.log('invalid');
       console.log(this.createForm.hasError('required', ['multiple']));
@@ -220,6 +348,7 @@ export class CreateComponent implements OnInit {
     fields.forEach((field) => {
       if (field.validators && field.validators.length > 0) {
         validators = [];
+
         field.validators.forEach((v: any) => {
           if (v.name === 'required') {
             validators.push(Validators.required);
@@ -233,10 +362,16 @@ export class CreateComponent implements OnInit {
         validators = [];
       }
 
-      console.log('toFormGroup', field.control, field.value, validators);
-
       group[field.control] = new FormControl(field.value || null, validators);
+
+      console.log(group[field.control]);
+
+      this.createdFormGroups.set(field.control, group[field.control]);
     });
+
+    console.log('toFormGroup', group);
+
+    console.log(this.createdFormGroups);
 
     return new FormGroup(group);
   }
@@ -288,10 +423,5 @@ export class CreateComponent implements OnInit {
       return;
     }
     console.log(this.newForm.value);
-  }
-
-  openTab = 1;
-  toggleTabs($tabNumber: number) {
-    this.openTab = $tabNumber;
   }
 }
