@@ -259,8 +259,8 @@
 // export { text, numberF, textarea, select, multiSelect, checkbox, radio, date, time, dateTime, file, image, video, pdf };
 
 interface IField {
-  control: string | any;
   type: string;
+  control: string | any;
 
   label?: string;
   value?: string | number | boolean | any[] | null;
@@ -291,7 +291,7 @@ interface ITextarea extends IField {
 }
 
 interface ISelect extends IField {
-  options: { key: string; value: any }[];
+  options: any[];
   bindLabel?: string;
   bindValue?: any;
   searchable?: boolean;

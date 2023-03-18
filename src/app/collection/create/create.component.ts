@@ -34,9 +34,9 @@ export class CreateComponent implements OnInit {
 
   title = new FormControl('', [Validators.required]);
 
-  collectionTypes = [
-    { id: 1, name: 'String', title: '', placeholder: '', validators: [] },
-    { id: 2, name: 'Text', title: '', placeholder: '', validators: [] },
+  fieldTypes = [
+    { id: 1, name: 'Text', title: '', placeholder: '', validators: [] },
+    { id: 2, name: 'Textarea', title: '', placeholder: '', validators: [] },
     { id: 3, name: 'Number', title: '', placeholder: '', validators: [] },
     { id: 4, name: 'Email', title: '', placeholder: '', validators: [] },
     { id: 5, name: 'Password', title: '', placeholder: '', validators: [] },
@@ -59,101 +59,24 @@ export class CreateComponent implements OnInit {
     { id: 18, name: 'DateTime', title: '', placeholder: '', validators: [] },
   ];
 
-  page: IPage = {
-    size: 0,
-    totalElements: 0,
-    totalPages: 0,
-    pageNumber: 0,
-  };
-
   cars = [
-    { id: 1, name: 'Volvo' },
-    { id: 2, name: 'Saab' },
-    { id: 3, name: 'Opel' },
-    { id: 4, name: 'Audi' },
+    { id: 1, value: 'Volvo' },
+    { id: 2, value: 'Saab' },
+    { id: 3, value: 'Opel' },
+    { id: 4, value: 'Audi' },
   ];
-
-  rawData = [
-    {
-      id: 1,
-      name: 'Leanne Graham',
-      address: 'Kulas Light',
-      city: 'Gwenborough',
-      state: 'NY',
-      zip: '92998-3874',
-      phone: '1-770-736-8031 x56442',
-      email: 'fake@mail.com',
-      company: 'Romaguera-Crona',
-      date: '2019-01-21',
-      status: 'active',
-    },
-    {
-      id: 2,
-      name: 'Ervin Howell',
-      address: 'Victor Plains',
-      city: 'Wisokyburgh',
-      state: 'NY',
-      zip: '90566-7771',
-      phone: '010-692-6593 x09125',
-      email: 'temp@mail.com',
-      company: 'Deckow-Crist',
-      date: '2019-01-21',
-      status: 'active',
-    },
-    {
-      id: 3,
-      name: 'Ervin Howell',
-      address: 'Victor Plains',
-      city: 'Wisokyburgh',
-      state: 'NY',
-      zip: '90566-7771',
-      phone: '010-692-6593 x09125',
-      email: 'temp@mail.com',
-      company: 'Deckow-Crist',
-      date: '2019-01-21',
-      status: 'active',
-    },
-    {
-      id: 4,
-      name: 'Ervin Howell',
-      address: 'Victor Plains',
-      city: 'Wisokyburgh',
-      state: 'NY',
-      zip: '90566-7771',
-      phone: '010-692-6593 x09125',
-      email: 'temp@mail.com',
-      company: 'Deckow-Crist',
-      date: '2019-01-21',
-      status: 'active',
-    },
-    {
-      id: 5,
-      name: 'Ervin Howell',
-      address: 'Victor Plains',
-      city: 'Wisokyburgh',
-      state: 'NY',
-      zip: '90566-7771',
-      phone: '010-692-6593 x09125',
-      email: 'temp@mail.com',
-      company: 'Deckow-Crist',
-      date: '2019-01-21',
-      status: 'active',
-    },
-  ];
-
-  data: any = [];
 
   openTab = 1;
   toggleTabs($tabNumber: number) {
     this.openTab = $tabNumber;
   }
 
-  createdFormGroups = new Map();
+  formGroups = new Map();
 
-  createFromFields: IText[] | ICheckbox[] | IFile[] | ISelect[] = [
+  fromFields: any = [
     {
-      control: 'title',
       type: 'text',
+      control: 'title',
       label: 'Title',
       placeholder: 'Title',
       value: '',
@@ -161,18 +84,16 @@ export class CreateComponent implements OnInit {
       validators: [
         {
           name: 'required',
-          message: 'Name is required',
         },
         {
           name: 'minLength',
-          message: 'Name must be at least 3 characters long',
           value: 3,
         },
       ],
     },
     {
-      control: 'placeholder',
       type: 'text',
+      control: 'placeholder',
       label: 'Placeholder',
       placeholder: 'Placeholder',
       value: '',
@@ -180,165 +101,81 @@ export class CreateComponent implements OnInit {
       validators: [
         {
           name: 'required',
-          message: 'Name is required',
         },
       ],
     },
     {
-      control: 'required',
       type: 'checkbox',
+      control: 'required',
       label: 'Required',
-      placeholder: 'Required',
+      altLabel: 'Not Required',
       value: false,
       order: 3,
     },
     {
-      control: 'maxLength',
       type: 'number',
+      control: 'maxLength',
       label: 'Max Length',
       placeholder: 'Max Length',
-      value: null,
+      value: 0,
       order: 4,
     },
     {
-      control: 'minLength',
       type: 'number',
+      control: 'minLength',
       label: 'Min Length',
       placeholder: 'Min Length',
-      value: null,
+      value: 0,
       order: 5,
+    },
+    {
+      type: 'number',
+      control: 'maxValue',
+      label: 'Max Value',
+      placeholder: 'Max Value',
+      value: 0,
+      order: 6,
+    },
+    {
+      type: 'number',
+      control: 'minValue',
+      label: 'Min Value',
+      placeholder: 'Min Value',
+      value: 0,
+      order: 7,
+    },
+    {
+      type: 'text',
+      control: 'pattern',
+      label: 'Pattern',
+      placeholder: 'Pattern',
+      value: null,
+      order: 8,
+    },
+    {
+      type: 'select',
+      control: 'cars',
+      label: 'Cars',
+      placeholder: 'Cars',
+      value: null,
+      order: 6,
+      options: this.cars,
+      bindLabel: 'value',
+      bindValue: 'id',
+      searchable: true,
+      clearable: true,
+      closeOnSelect: true,
+      validators: [
+        {
+          name: 'required',
+        },
+      ],
     },
   ];
 
-  finalCreateFromFields: IText[] | ICheckbox[] | IFile[] | ISelect[] = [];
+  finalFromFields: any = [];
 
-  constructor(
-    private fb: FormBuilder,
-    public modal: ModalService,
-    service: QuestionService
-  ) {
-    this.questions$ = service.getQuestions();
-  }
-
-  ngOnInit() {
-    this.setPage({ offset: 0 });
-
-    // console.log(this.createFromFields);
-    this.thirdForm = this.toFormGroup(this.createFromFields);
-
-    this.finalCreateFromFields = [
-      {
-        control: this.createdFormGroups.get('title'),
-        type: 'text',
-        label: 'Title',
-        placeholder: 'Title',
-        value: '',
-        order: 1,
-        validators: [
-          {
-            name: 'required',
-            message: 'Name is required',
-          },
-          {
-            name: 'minLength',
-            message: 'Name must be at least 3 characters long',
-            value: 3,
-          },
-        ],
-      },
-      {
-        control: this.createdFormGroups.get('placeholder'),
-        type: 'text',
-        label: 'Placeholder',
-        placeholder: 'Placeholder',
-        value: '',
-        order: 2,
-      },
-      {
-        control: this.createdFormGroups.get('required'),
-        type: 'checkbox',
-        label: 'Required',
-        placeholder: 'Required',
-        value: false,
-        order: 3,
-      },
-      {
-        control: this.createdFormGroups.get('maxLength'),
-        type: 'number',
-        label: 'Max Length',
-        placeholder: 'Max Length',
-        value: null,
-        order: 4,
-      },
-      {
-        control: this.createdFormGroups.get('minLength'),
-        type: 'number',
-        label: 'Min Length',
-        placeholder: 'Min Length',
-        value: null,
-        order: 5,
-      },
-    ];
-
-    // console.log(this.thirdForm);
-
-    this.createForm = this.fb.group({
-      title: ['', Validators.required],
-      placeholder: [''],
-      required: [false],
-      maxLength: [null],
-      minLength: [null],
-      maxValue: [null],
-      minValue: [null],
-      pattern: [''],
-      patternMessage: [''],
-      email: [false],
-    });
-
-    this.modal.register(this.configModal);
-    // this.newForm = this.toFormGroup(this.newField);
-  }
-
-  ngOnDestroy(): void {
-    this.modal.unregister(this.configModal);
-    this.modal.unregister(this.typeSettingModal);
-  }
-
-  setPage(pageInfo: any) {
-    // console.log(pageInfo);
-    this.page.pageNumber = pageInfo.offset;
-    this.page.size = 2;
-    this.page.totalElements = 5;
-    this.data = this.rawData.slice(this.page.pageNumber * this.page.size);
-    // console.log(this.data);
-  }
-
-  openModal() {
-    this.modal.toggleModal(this.configModal);
-  }
-
-  selectCollectionType(selectedType: string) {
-    console.log(selectedType);
-    this.selectedType = selectedType;
-    this.modal.toggleModal(this.configModal);
-    this.modal.register(this.typeSettingModal);
-    this.modal.toggleModal(this.typeSettingModal);
-  }
-
-  createField() {
-    if (this.createForm.invalid) {
-      console.log('invalid');
-      console.log(this.createForm.hasError('required', ['multiple']));
-    }
-
-    console.log(this.title.value);
-
-    console.log(this.createForm.value);
-  }
-
-  // section: dynamic form
-
-  questions$: Observable<QuestionBase<any>[]>;
+  constructor(private fb: FormBuilder, public modal: ModalService) {}
 
   toFormGroup(fields: any[]) {
     const group: any = {};
@@ -354,6 +191,16 @@ export class CreateComponent implements OnInit {
             validators.push(Validators.required);
           } else if (v.name === 'minLength') {
             validators.push(Validators.minLength(v.value));
+          } else if (v.name === 'maxLength') {
+            validators.push(Validators.maxLength(v.value));
+          } else if (v.name === 'minValue') {
+            validators.push(Validators.min(v.value));
+          } else if (v.name === 'maxValue') {
+            validators.push(Validators.max(v.value));
+          } else if (v.name === 'pattern') {
+            validators.push(Validators.pattern(v.value));
+          } else if (v.name === 'email') {
+            validators.push(Validators.email);
           } else {
             validators.push([]);
           }
@@ -362,54 +209,70 @@ export class CreateComponent implements OnInit {
         validators = [];
       }
 
-      group[field.control] = new FormControl(field.value || null, validators);
+      group[field.control] = new FormControl(field.value ?? null, validators);
 
-      console.log(group[field.control]);
+      // console.log(group[field.control]);
 
-      this.createdFormGroups.set(field.control, group[field.control]);
+      this.formGroups.set(field.control, group[field.control]);
     });
 
-    console.log('toFormGroup', group);
+    // console.log('toFormGroup', group);
 
-    console.log(this.createdFormGroups);
+    // console.log(this.formGroups);
 
     return new FormGroup(group);
   }
 
-  newField = [
-    {
-      control: 'name',
-      label: 'Name',
-      type: 'text',
-      options: [],
-      validators: [
-        {
-          name: 'required',
-          message: 'Name is required',
-        },
-        {
-          name: 'minLength',
-          message: 'Name must be at least 3 characters long',
-          value: 3,
-        },
-      ],
-    },
-    {
-      control: 'cars',
-      label: 'Cars',
-      type: 'select',
-      options: [
-        { id: 1, name: 'Volvo' },
-        { id: 2, name: 'Saab' },
-      ],
-      validators: [
-        {
-          name: 'required',
-          message: 'Name is required',
-        },
-      ],
-    },
-  ];
+  ngOnInit() {
+    this.thirdForm = this.toFormGroup(this.fromFields);
+
+    this.formGroups.forEach((value, key) => {
+      // console.log(key, value);
+      this.finalFromFields = this.fromFields.map((field: any) => {
+        if (field.type !== 'select') {
+          if (field.control === key) {
+            field.control = value;
+          }
+        }
+        return field;
+      });
+    });
+
+    // console.log(this.finalFromFields);
+
+    this.createForm = this.fb.group({
+      title: ['', Validators.required],
+      placeholder: [''],
+      type: [''],
+      required: [false],
+      maxLength: [null],
+      minLength: [null],
+      maxValue: [null],
+      minValue: [null],
+      pattern: [''],
+      patternMessage: [''],
+      email: [false],
+    });
+
+    this.modal.register(this.configModal);
+  }
+
+  ngOnDestroy(): void {
+    this.modal.unregister(this.configModal);
+    this.modal.unregister(this.typeSettingModal);
+  }
+
+  openModal() {
+    this.modal.toggleModal(this.configModal);
+  }
+
+  selectCollectionType(selectedType: string) {
+    console.log(selectedType);
+    this.selectedType = selectedType;
+    this.modal.toggleModal(this.configModal);
+    this.modal.register(this.typeSettingModal);
+    this.modal.toggleModal(this.typeSettingModal);
+  }
 
   onSubmit() {
     console.log(
@@ -423,5 +286,86 @@ export class CreateComponent implements OnInit {
       return;
     }
     console.log(this.newForm.value);
+  }
+
+  createField() {
+    Object.keys(this.thirdForm.value).forEach((key) => {
+      if (typeof this.thirdForm.value[key] === 'string') {
+        this.thirdForm.value[key] = Number.isNaN(+this.thirdForm.value[key])
+          ? this.thirdForm.value[key]
+          : +this.thirdForm.value[key];
+      }
+    });
+
+    console.log('third form', this.thirdForm.value);
+
+    let validators: any = [];
+
+    if (this.thirdForm.value.required) {
+      validators.push({
+        name: 'required',
+      });
+    }
+
+    if (this.thirdForm.value.maxLength) {
+      validators.push({
+        name: 'maxLength',
+        value: this.thirdForm.value.maxLength,
+      });
+    }
+    if (this.thirdForm.value.maxValue) {
+      validators.push({
+        name: 'maxValue',
+        value: this.thirdForm.value.maxValue,
+      });
+    }
+
+    if (this.thirdForm.value.minLength) {
+      validators.push({
+        name: 'minLength',
+        value: this.thirdForm.value.minLength,
+      });
+    }
+
+    if (this.thirdForm.value.minValue) {
+      validators.push({
+        name: 'minValue',
+        value: this.thirdForm.value.minValue,
+      });
+    }
+
+    if (this.thirdForm.value.pattern) {
+      validators.push({
+        name: 'pattern',
+        value: this.thirdForm.value.pattern,
+      });
+    }
+
+    if (this.selectedType === 'email') {
+      validators.push({
+        name: 'email',
+      });
+    }
+
+    const formField = {
+      type: 'text',
+      control: this.thirdForm.value.title
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(''),
+      label: this.thirdForm.value.title,
+      placeholder: this.thirdForm.value.placeholder,
+      value: '',
+      validators: validators,
+    };
+
+    console.log(this.toFormGroup([formField]));
+
+    // if (this.createForm.invalid) {
+    //   console.log('invalid');
+    //   console.log(this.createForm.hasError('required', ['multiple']));
+    // }
+
+    // console.log(this.createForm.value);
   }
 }

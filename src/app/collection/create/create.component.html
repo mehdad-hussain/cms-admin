@@ -15,7 +15,7 @@
     <h3 title>Configuration</h3>
 
     <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
-      <ng-container *ngFor="let collectionType of collectionTypes">
+      <ng-container *ngFor="let collectionType of fieldTypes">
         <div
           class="col-span-3 border-2 border-gray-300 rounded-md py-4 text-center cursor-pointer shadow-sm hover:bg-slate-300 focus:outline focus:outline-slate-600"
           (click)="selectCollectionType(collectionType.name)"
@@ -28,7 +28,7 @@
     </div>
   </app-modal-container>
 
-  <!-- section: field type settings -->
+  <!-- section: field type settings modal -->
   <app-modal-container [modalID]="'typeSettingModal'">
     <h3 title>Add {{ selectedType }} Field</h3>
 
@@ -77,14 +77,22 @@
                   [ngClass]="{ hidden: openTab !== 1, block: openTab === 1 }"
                 >
                   <div class="col-span-12 md:col-span-6">
-                    <app-input
-                      [label]="'Title'"
-                      [placeHolder]="'Title'"
-                      [control]="title"
-                      [inputType]="'text'"
-                      labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
-                    ></app-input>
+                    <label
+                      for="title"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Title
+                    </label>
+                    <div class="mt-1">
+                      <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        placeholder="title"
+                        formControlName="title"
+                      />
+                    </div>
                   </div>
 
                   <div class="col-span-12 md:col-span-6">
@@ -102,6 +110,25 @@
                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         placeholder="Placeholder"
                         formControlName="placeholder"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-span-12 md:col-span-6">
+                    <label
+                      for="type"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Type
+                    </label>
+                    <div class="mt-1">
+                      <input
+                        type="text"
+                        name="type"
+                        id="type"
+                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        placeholder="type"
+                        formControlName="type"
                       />
                     </div>
                   </div>
@@ -277,50 +304,19 @@
   </app-modal-container>
 
   <!-- section: experimenting -->
-  <!-- 
-  <form [formGroup]="newForm">
-    <div *ngFor="let field of newField">
-      <label [attr.for]="field.control">{{ field.label }}</label>
 
-      <div [ngSwitch]="field.type">
-        <input
-          *ngSwitchCase="'text'"
-          [formControlName]="field.control"
-          [id]="field.control"
-          [type]="field.type"
-        />
-
-        <ng-select
-          *ngSwitchCase="'select'"
-          [items]="field.options"
-          bindLabel="name"
-          bindValue="id"
-          [clearable]="false"
-          [multiple]="true"
-          groupBy="name"
-          [searchable]="true"
-          placeholder="Select cars"
-          [formControlName]="field.control"
-        >
-        </ng-select>
-      </div>
-    </div>
-    <div class="col-span-6">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        type="submit"
-        (click)="onSubmit()"
-      >
-        Submit
-      </button>
-    </div>
-  </form> -->
-
-  <form [formGroup]="createForm" autocomplete="off">
+  <form [formGroup]="thirdForm" autocomplete="off">
     <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
-      <ng-container *ngFor="let field of finalCreateFromFields">
+      <ng-container *ngFor="let field of fromFields">
         <div class="col-span-12 md:col-span-6">
           <app-input
+            *ngIf="
+              field.type === 'text' ||
+              field.type === 'email' ||
+              field.type === 'password' ||
+              field.type === 'number' ||
+              field.type === 'textarea'
+            "
             [label]="field.label"
             [placeHolder]="field.placeholder"
             [control]="field.control"
@@ -328,34 +324,41 @@
             labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
           ></app-input>
+
+          <app-checkbox
+            *ngIf="field.type === 'checkbox'"
+            [control]="field.control"
+            >{{
+              field.control.value ? field.label : field.altLabel
+            }}</app-checkbox
+          >
+
+          <ng-select
+            *ngIf="field.type === 'select'"
+            [items]="field.options"
+            [bindLabel]="field.bindLabel"
+            [bindValue]="field.bindValue"
+            [clearable]="field.clearable"
+            [multiple]="true"
+            groupBy="name"
+            [searchable]="field.searchable"
+            [closeOnSelect]="field.closeOnSelect"
+            [placeholder]="field.placeholder"
+            [formControlName]="field.control"
+          >
+          </ng-select>
         </div>
       </ng-container>
     </div>
+
+    <div class="col-span-6">
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        type="submit"
+        (click)="createField()"
+      >
+        Create
+      </button>
+    </div>
   </form>
 </app-page-layout>
-
-<!-- <div>
-    <h2>Job Application for Heroes</h2>
-    <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
-  </div> -->
-
-<!-- <app-input
-    [label]="'Title'"
-    [placeHolder]="'Title'"
-    [control]="title"
-    [inputType]="'text'"
-    labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-    inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
-  ></app-input>
-
-  <ng-select
-    [items]="collectionTypes"
-    bindLabel="name"
-    bindValue="key"
-    [groupBy]="'name'"
-    [multiple]="true"
-    [clearable]="false"
-    [searchable]="true"
-    placeholder="Select collection type"
-  >
-  </ng-select> -->
