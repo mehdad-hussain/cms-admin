@@ -361,4 +361,9 @@
       </button>
     </div>
   </form>
+
+  <app-form-builder
+    *ngIf="inputFormFields.length"
+    [fromFields]="inputFormFields"
+  ></app-form-builder>
 </app-page-layout>

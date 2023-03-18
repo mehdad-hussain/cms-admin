@@ -79,7 +79,7 @@ export class CreateComponent implements OnInit {
       control: 'title',
       label: 'Title',
       placeholder: 'Title',
-      value: '',
+      value: null,
       order: 1,
       validators: [
         {
@@ -96,7 +96,7 @@ export class CreateComponent implements OnInit {
       control: 'placeholder',
       label: 'Placeholder',
       placeholder: 'Placeholder',
-      value: '',
+      value: null,
       order: 2,
       validators: [
         {
@@ -228,7 +228,7 @@ export class CreateComponent implements OnInit {
 
     this.formGroups.forEach((value, key) => {
       // console.log(key, value);
-      this.finalFromFields = this.fromFields.map((field: any) => {
+      this.fromFields = this.fromFields.map((field: any) => {
         if (field.type !== 'select') {
           if (field.control === key) {
             field.control = value;
@@ -238,19 +238,17 @@ export class CreateComponent implements OnInit {
       });
     });
 
-    // console.log(this.finalFromFields);
-
     this.createForm = this.fb.group({
-      title: ['', Validators.required],
-      placeholder: [''],
-      type: [''],
+      title: [null, Validators.required],
+      placeholder: [null],
+      type: [null],
       required: [false],
       maxLength: [null],
       minLength: [null],
       maxValue: [null],
       minValue: [null],
-      pattern: [''],
-      patternMessage: [''],
+      pattern: [null],
+      patternMessage: [null],
       email: [false],
     });
 
@@ -290,7 +288,10 @@ export class CreateComponent implements OnInit {
 
   createField() {
     Object.keys(this.thirdForm.value).forEach((key) => {
-      if (typeof this.thirdForm.value[key] === 'string') {
+      if (
+        typeof this.thirdForm.value[key] === 'string' ||
+        this.thirdForm.value[key] !== null
+      ) {
         this.thirdForm.value[key] = Number.isNaN(+this.thirdForm.value[key])
           ? this.thirdForm.value[key]
           : +this.thirdForm.value[key];
@@ -359,7 +360,11 @@ export class CreateComponent implements OnInit {
       validators: validators,
     };
 
-    console.log(this.toFormGroup([formField]));
+    this.inputFormFields = [...this.inputFormFields, formField];
+
+    console.log(this.inputFormFields);
+
+    // console.log(this.toFormGroup([formField]));
 
     // if (this.createForm.invalid) {
     //   console.log('invalid');
@@ -368,4 +373,6 @@ export class CreateComponent implements OnInit {
 
     // console.log(this.createForm.value);
   }
+
+  inputFormFields: any = [];
 }
