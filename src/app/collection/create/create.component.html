@@ -3,12 +3,43 @@
   [showCard]="false"
   [showTable]="false"
 >
-  <button
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    (click)="openModal()"
+  <!-- section: Collection info Card -->
+
+  <div
+    class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-4 m-4"
   >
-    Add Field
-  </button>
+    <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
+      <div class="col-span-12 md:col-span-6">
+        <app-input
+          label="Collection Name"
+          placeHolder="Enter Collection Name"
+          [control]="collectionName"
+          inputType="text"
+          labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+        ></app-input>
+      </div>
+      <div class="col-span-12 md:col-span-6">
+        <app-input
+          label="Collection Description"
+          placeHolder="Enter Collection Description"
+          [control]="collectionDescription"
+          inputType="text"
+          labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+        ></app-input>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 mt-4">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          (click)="openModal()"
+        >
+          Add Field to Collection
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- section: field selection modal  -->
   <app-modal-container [modalID]="configModal">
@@ -30,10 +61,8 @@
 
   <!-- section: field type settings modal -->
   <app-modal-container [modalID]="'typeSettingModal'">
-    <h3 title>Add {{ selectedType }} Field</h3>
+    <h3 title>Add {{ selectedType | titlecase }} Field</h3>
 
-    <!-- make a form with Title, PlaceHolder, Validators multi select  -->
-    <!-- class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3" -->
     <form [formGroup]="createForm" autocomplete="off">
       <div class="flex flex-wrap">
         <div class="w-full">
@@ -76,62 +105,48 @@
                   class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
                   [ngClass]="{ hidden: openTab !== 1, block: openTab === 1 }"
                 >
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for="title"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Title
-                    </label>
-                    <div class="mt-1">
-                      <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                        placeholder="title"
-                        formControlName="title"
-                      />
-                    </div>
-                  </div>
+                  <ng-container *ngFor="let field of generalFormFields">
+                    <div class="col-span-12 md:col-span-6">
+                      <app-input
+                        *ngIf="
+                          field.type === 'text' ||
+                          field.type === 'email' ||
+                          field.type === 'password' ||
+                          field.type === 'number' ||
+                          field.type === 'textarea'
+                        "
+                        [label]="field.label"
+                        [placeHolder]="field.placeholder"
+                        [control]="field.control"
+                        [inputType]="field.type"
+                        labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+                      ></app-input>
 
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for="placeholder"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Placeholder
-                    </label>
-                    <div class="mt-1">
-                      <input
-                        type="text"
-                        name="placeholder"
-                        id="placeholder"
-                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                        placeholder="Placeholder"
-                        formControlName="placeholder"
-                      />
-                    </div>
-                  </div>
+                      <app-checkbox
+                        *ngIf="field.type === 'checkbox'"
+                        [control]="field.control"
+                        >{{
+                          field.control.value ? field.label : field.altLabel
+                        }}</app-checkbox
+                      >
 
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for="type"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Type
-                    </label>
-                    <div class="mt-1">
-                      <input
-                        type="text"
-                        name="type"
-                        id="type"
-                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                        placeholder="type"
-                        formControlName="type"
-                      />
+                      <ng-select
+                        *ngIf="field.type === 'select'"
+                        [items]="field.options"
+                        [bindLabel]="field.bindLabel"
+                        [bindValue]="field.bindValue"
+                        [clearable]="field.clearable"
+                        [multiple]="true"
+                        groupBy="name"
+                        [searchable]="field.searchable"
+                        [closeOnSelect]="field.closeOnSelect"
+                        [placeholder]="field.placeholder"
+                        [formControlName]="field.control"
+                      >
+                      </ng-select>
                     </div>
-                  </div>
+                  </ng-container>
                 </div>
 
                 <!-- section: validators -->
@@ -139,151 +154,48 @@
                   class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3"
                   [ngClass]="{ hidden: openTab !== 2, block: openTab === 2 }"
                 >
-                  <!-- section: required -->
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
-                    <input
-                      type="checkbox"
-                      formControlName="required"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 ring-1 border-gray-300 rounded-sm"
-                    />
-                    <label
-                      for="required"
-                      class="block text-sm font-medium text-gray-700"
+                  <ng-container *ngFor="let field of validationFormFields">
+                    <div class="col-span-12 md:col-span-6">
+                      <app-input
+                        *ngIf="
+                          field.type === 'text' ||
+                          field.type === 'email' ||
+                          field.type === 'password' ||
+                          field.type === 'number' ||
+                          field.type === 'textarea'
+                        "
+                        [label]="field.label"
+                        [placeHolder]="field.placeholder"
+                        [control]="field.control"
+                        [inputType]="field.type"
+                        labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
+                      ></app-input>
+
+                      <app-checkbox
+                        *ngIf="field.type === 'checkbox'"
+                        [control]="field.control"
+                        >{{
+                          field.control.value ? field.label : field.altLabel
+                        }}</app-checkbox
+                      >
+
+                      <!-- <ng-select
+                      *ngIf="field.type === 'select'"
+                      [items]="field.options"
+                      [bindLabel]="field.bindLabel"
+                      [bindValue]="field.bindValue"
+                      [clearable]="field.clearable"
+                      [multiple]="true"
+                      groupBy="name"
+                      [searchable]="field.searchable"
+                      [closeOnSelect]="field.closeOnSelect"
+                      [placeholder]="field.placeholder"
+                      [formControlName]="field.control"
                     >
-                      {{
-                        createForm.controls["required"].value
-                          ? "Required"
-                          : "Not Required"
-                      }}
-                    </label>
-                  </div>
-
-                  <div></div>
-
-                  <hr class="col-span-12" />
-                  <!-- section: max length -->
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Max Length
-                    </label>
-                    <input
-                      type="number"
-                      formControlName="maxLength"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: min length -->
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Min Length
-                    </label>
-                    <input
-                      type="number"
-                      formControlName="minLength"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: max value -->
-
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Max Value
-                    </label>
-                    <input
-                      type="number"
-                      formControlName="maxValue"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: min value -->
-
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Min Value
-                    </label>
-                    <input
-                      type="number"
-                      formControlName="minValue"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: pattern -->
-
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Pattern
-                    </label>
-                    <input
-                      type="text"
-                      formControlName="pattern"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: pattern message -->
-
-                  <div class="col-span-12 md:col-span-6">
-                    <label
-                      for=""
-                      class="inline-block text-sm font-medium text-gray-700"
-                    >
-                      Pattern Message
-                    </label>
-                    <input
-                      type="text"
-                      formControlName="patternMessage"
-                      min="0"
-                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 flex-grow block text-right sm:text-sm border-gray-300 rounded-md pr-4"
-                    />
-                  </div>
-
-                  <!-- section: email -->
-
-                  <div
-                    class="col-span-12 md:col-span-6 flex items-center space-x-4"
-                  >
-                    <input
-                      type="checkbox"
-                      formControlName="email"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 ring-1 border-gray-300 rounded-sm"
-                    />
-                    <label
-                      for="email"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      {{
-                        createForm.controls["email"].value
-                          ? "Email"
-                          : "Not Email"
-                      }}
-                    </label>
-                  </div>
+                    </ng-select> -->
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -303,67 +215,111 @@
     </form>
   </app-modal-container>
 
-  <!-- section: experimenting -->
-
-  <form [formGroup]="thirdForm" autocomplete="off">
-    <div class="grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-3">
-      <ng-container *ngFor="let field of fromFields">
-        <div class="col-span-12 md:col-span-6">
-          <app-input
-            *ngIf="
-              field.type === 'text' ||
-              field.type === 'email' ||
-              field.type === 'password' ||
-              field.type === 'number' ||
-              field.type === 'textarea'
-            "
-            [label]="field.label"
-            [placeHolder]="field.placeholder"
-            [control]="field.control"
-            [inputType]="field.type"
-            labelClasses="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            inputClasses="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300"
-          ></app-input>
-
-          <app-checkbox
-            *ngIf="field.type === 'checkbox'"
-            [control]="field.control"
-            >{{
-              field.control.value ? field.label : field.altLabel
-            }}</app-checkbox
-          >
-
-          <ng-select
-            *ngIf="field.type === 'select'"
-            [items]="field.options"
-            [bindLabel]="field.bindLabel"
-            [bindValue]="field.bindValue"
-            [clearable]="field.clearable"
-            [multiple]="true"
-            groupBy="name"
-            [searchable]="field.searchable"
-            [closeOnSelect]="field.closeOnSelect"
-            [placeholder]="field.placeholder"
-            [formControlName]="field.control"
-          >
-          </ng-select>
-        </div>
-      </ng-container>
-    </div>
-
-    <div class="col-span-6">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        type="submit"
-        (click)="createField()"
+  <!-- section: table list of fields in collection -->
+  <!-- <ng-container dataTable> -->
+  <ngx-datatable
+    *ngIf="data?.length"
+    class="w-full !bg-transparent !shadow-none"
+    [rows]="data"
+    [columnMode]="'force'"
+    [headerHeight]="30"
+    [footerHeight]="50"
+    rowHeight="auto"
+    [scrollbarH]="true"
+    [reorderable]="true"
+    [swapColumns]="true"
+    rowHeight="auto"
+    [count]="page.totalElements"
+  >
+    <!-- [offset]="page.pageNumber"
+    [limit]="page.size"
+    (page)="setPage($event)"
+    [externalPaging]="true" -->
+    <ngx-datatable-column name="#" [flexGrow]="0.5" [width]="20">
+      <ng-template
+        let-rowIndex="rowIndex"
+        let-row="row"
+        ngx-datatable-cell-template
       >
-        Create
-      </button>
-    </div>
-  </form>
-
-  <app-form-builder
-    *ngIf="inputFormFields.length"
-    [fromFields]="inputFormFields"
-  ></app-form-builder>
+        {{ rowIndex + 1 }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Collection Name" [flexGrow]="2">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.CollectionName | titlecase }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Collection Url" [flexGrow]="2">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.address }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Field Title" [flexGrow]="2">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.Fields.label }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Field Type" [flexGrow]="2">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.Fields.type | titlecase }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Field Validators" [flexGrow]="6">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <ng-container *ngFor="let item of row?.Fields.validators">
+          <p>
+            <span> Name: {{ item.name | titlecase }} </span>
+            <span *ngIf="item.value"> Value: {{ item.value }} </span>
+          </p>
+        </ng-container>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Actions" [flexGrow]="2">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <!-- 2 buttons for edit and delete -->
+        <div class="flex items-center space-x-4 text-sm">
+          <button
+            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
+            aria-label="Edit"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h7a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+          <button
+            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-blue"
+            aria-label="Delete"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h7a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  <!-- </ng-container> -->
 </app-page-layout>
+
+<!-- <app-form-builder
+  *ngIf="inputFormFields.length"
+  [fromFields]="inputFormFields"
+></app-form-builder> -->

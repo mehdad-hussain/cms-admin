@@ -58,6 +58,7 @@ export class FormBuilderComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.fromFields);
+    // this.fromFields = [...this.fromFields];
 
     this.dynamicForm = this.toFormGroup(this.fromFields);
 
