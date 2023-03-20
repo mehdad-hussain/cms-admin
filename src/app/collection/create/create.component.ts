@@ -234,6 +234,7 @@ export class CreateComponent implements OnInit {
   }
 
   openModal() {
+    this.isUpdate = false;
     this.modal.toggleModal(this.configModal);
   }
 
@@ -273,6 +274,7 @@ export class CreateComponent implements OnInit {
     if (this.settingForm.value.required) {
       validators.push({
         name: 'required',
+        value: this.settingForm.value.required,
       });
     }
 
@@ -376,48 +378,15 @@ export class CreateComponent implements OnInit {
 
   onEdit(row: any) {
     this.isUpdate = true;
-    this.settingForm.patchValue({
-      title: row.Fields.label,
-      placeholder: row.Fields.placeholder,
-      required: row.Fields.validators.some(
-        (validator: any) => validator.name === 'required'
-      ),
-      maxLength: row.Fields.validators.find(
-        (validator: any) => validator.name === 'maxLength'
-      )
-        ? row.Fields.validators.find(
-            (validator: any) => validator.name === 'maxLength'
-          ).value
-        : 0,
-      minLength: row.Fields.validators.find(
-        (validator: any) => validator.name === 'minLength'
-      )
-        ? row.Fields.validators.find(
-            (validator: any) => validator.name === 'minLength'
-          ).value
-        : 0,
-      maxValue: row.Fields.validators.find(
-        (validator: any) => validator.name === 'maxValue'
-      )
-        ? row.Fields.validators.find(
-            (validator: any) => validator.name === 'maxValue'
-          ).value
-        : 0,
 
-      minValue: row.Fields.validators.find(
-        (validator: any) => validator.name === 'minValue'
-      )
-        ? row.Fields.validators.find(
-            (validator: any) => validator.name === 'minValue'
-          ).value
-        : 0,
-      pattern: row.Fields.validators.find(
-        (validator: any) => validator.name === 'pattern'
-      )
-        ? row.Fields.validators.find(
-            (validator: any) => validator.name === 'pattern'
-          ).value
-        : null,
+    console.log('edit form', row);
+
+    let validators: any = row.Fields.validators;
+
+    this.settingForm.controls['title'].setValue(row.Fields.label);
+
+    validators.forEach((validator: any) => {
+      this.settingForm.controls[validator.name].setValue(validator.value);
     });
 
     this.modal.toggleModal(this.typeSettingModal);
