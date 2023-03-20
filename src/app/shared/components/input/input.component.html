@@ -54,33 +54,49 @@
     <small *ngIf="control.errors?.['required']">
       {{ label }} is required
     </small>
+
     <small *ngIf="control.errors?.['minlength']">
       You inserted
       {{ control.errors?.['minlength'].actualLength }}
-      characters,but minimum is
+      {{ control.errors?.['minlength'].actualLength > 1 ? 'characters': 'character'
+
+      }},but minimum length is
       {{ control.errors?.['minlength'].requiredLength }}
     </small>
+
+    <small *ngIf="control.errors?.['maxlength']">
+      You inserted
+      {{ control.errors?.['maxlength'].actualLength }}
+      characters,but maximum length is
+      {{ control.errors?.['maxlength'].requiredLength }}
+    </small>
+
     <small *ngIf="control.errors?.['email']">Email is not valid</small>
+
     <small *ngIf="control.errors?.['min']">
       You inserted
       {{ control.errors?.['min'].actual}}
-      , but minimum age granted is
+      , but minimum value granted is
       {{ control.errors?.['min'].min}}
     </small>
+
     <small *ngIf="control.errors?.['max']">
       You inserted
       {{ control.errors?.['max'].actual}}
-      , but maximum age granted is
+      , but maximum value granted is
       {{ control.errors?.['max'].max}}
       ></small
     >
     <small *ngIf="control.errors?.['message']">
       {{ control.errors?.['message'] }}
     </small>
+
     <small *ngIf="control.errors?.['pattern']">
       Enter a valid phone number e.g.+8801620430659
     </small>
+
     <small *ngIf="control.errors?.['missMatch']">Password do not match</small>
+
     <small *ngIf="control.errors?.['emailTaken']">
       Email is already taken, please choose another one.
     </small>

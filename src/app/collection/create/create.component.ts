@@ -23,7 +23,7 @@ import  {IText,
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent implements OnInit {
-  public createForm!: FormGroup;
+  public settingForm!: FormGroup;
   public thirdForm!: FormGroup;
   public newForm!: FormGroup;
   selectedCar!: 1;
@@ -31,8 +31,9 @@ export class CreateComponent implements OnInit {
   configModal = 'configModal';
   typeSettingModal = 'typeSettingModal';
   selectedType = '';
+  isUpdate: boolean = false;
 
-  title = new FormControl('', [Validators.required]);
+  constructor(private fb: FormBuilder, public modal: ModalService) {}
 
   fieldTypes = [
     { id: 1, name: 'Text', title: '', placeholder: '', validators: [] },
@@ -140,14 +141,10 @@ export class CreateComponent implements OnInit {
       type: 'text',
       control: 'pattern',
       label: 'Pattern',
-      placeholder: 'Pattern',
+      placeholder: "Insert the validator's pattern",
       value: null,
     },
   ];
-
-  finalFromFields: any = [];
-
-  constructor(private fb: FormBuilder, public modal: ModalService) {}
 
   toFormGroup(fields: any[]) {
     const group: any = {};
@@ -196,12 +193,12 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.createForm = this.toFormGroup([
+    this.settingForm = this.toFormGroup([
       ...this.generalFormFields,
       ...this.validationFormFields,
     ]);
 
-    console.log(this.createForm);
+    console.log(this.settingForm);
 
     this.formGroups.forEach((value, key) => {
       // console.log(key, value);
@@ -226,7 +223,7 @@ export class CreateComponent implements OnInit {
       );
     });
 
-    console.log(this.createForm);
+    console.log(this.settingForm);
 
     this.modal.register(this.configModal);
   }
@@ -243,80 +240,74 @@ export class CreateComponent implements OnInit {
   selectCollectionType(selectedType: string) {
     console.log(selectedType);
     this.selectedType = selectedType;
+    this.settingForm.reset();
+    this.openTab = 1;
     this.modal.toggleModal(this.configModal);
     this.modal.register(this.typeSettingModal);
     this.modal.toggleModal(this.typeSettingModal);
   }
 
-  // section: function for creating new form collection to add list table
-  onSubmit() {
-    if (this.newForm.invalid) {
-      console.log('invalid');
-      return;
-    }
-    console.log(this.newForm.value);
-  }
-
   // section: function for creating new field
-  createField() {
-    Object.keys(this.createForm.value).forEach((key) => {
+  createOrUpdateField(mode: string) {
+    Object.keys(this.settingForm.value).forEach((key) => {
       if (
-        typeof this.createForm.value[key] !== 'boolean' &&
-        typeof this.createForm.value[key] === 'string' &&
-        this.createForm.value[key] !== null
+        typeof this.settingForm.value[key] !== 'boolean' &&
+        typeof this.settingForm.value[key] === 'string' &&
+        this.settingForm.value[key] !== null
       ) {
-        this.createForm.value[key] = Number.isNaN(+this.createForm.value[key])
-          ? this.createForm.value[key]
-          : +this.createForm.value[key];
+        this.settingForm.value[key] = Number.isNaN(+this.settingForm.value[key])
+          ? this.settingForm.value[key]
+          : +this.settingForm.value[key];
       }
     });
 
-    if (this.createForm.invalid) {
+    if (this.settingForm.invalid) {
       console.log('invalid');
-      console.log('create form', this.createForm.value);
+      console.log('create form', this.settingForm.value);
     }
 
-    // let objForFieldCreation = { ...this.createForm.value };
+    // let objForFieldCreation = { ...this.settingForm.value };
 
     let validators: any = [];
 
-    if (this.createForm.value.required) {
+    if (this.settingForm.value.required) {
       validators.push({
         name: 'required',
       });
     }
 
-    if (this.createForm.value.maxLength) {
+    if (this.settingForm.value.maxLength) {
       validators.push({
         name: 'maxLength',
-        value: this.createForm.value.maxLength,
-      });
-    }
-    if (this.createForm.value.maxValue) {
-      validators.push({
-        name: 'maxValue',
-        value: this.createForm.value.maxValue,
+        value: this.settingForm.value.maxLength,
       });
     }
 
-    if (this.createForm.value.minLength) {
+    if (this.settingForm.value.minLength) {
       validators.push({
         name: 'minLength',
-        value: this.createForm.value.minLength,
+        value: this.settingForm.value.minLength,
       });
     }
 
-    if (this.createForm.value.minValue) {
+    if (this.settingForm.value.maxValue) {
+      validators.push({
+        name: 'maxValue',
+        value: this.settingForm.value.maxValue,
+      });
+    }
+
+    if (this.settingForm.value.minValue) {
       validators.push({
         name: 'minValue',
-        value: this.createForm.value.minValue,
+        value: this.settingForm.value.minValue,
       });
     }
 
-    if (this.createForm.value.pattern) {
+    if (this.settingForm.value.pattern) {
       validators.push({
         name: 'pattern',
-        value: this.createForm.value.pattern,
+        value: this.settingForm.value.pattern,
       });
     }
 
@@ -328,27 +319,39 @@ export class CreateComponent implements OnInit {
 
     const formField = {
       type: 'text',
-      control: this.createForm.value.title
+      control: this.settingForm.value.title
         .split(' ')
         .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(''),
-      label: this.createForm.value.title,
-      placeholder: this.createForm.value.placeholder,
+      label: this.settingForm.value.title,
+      placeholder: this.settingForm.value.placeholder,
       value: '',
       validators: validators,
     };
 
-    // console.log(objForFieldCreation);
-
-    this.rawData = [
-      ...this.rawData,
-      {
-        CollectionName: this.collectionName.value,
-        Fields: { ...formField },
-      },
-    ];
+    if (mode === 'create') {
+      this.rawData = [
+        ...this.rawData,
+        {
+          CollectionName: this.collectionName.value,
+          Fields: { ...formField },
+        },
+      ];
+    } else {
+      this.rawData = this.rawData.map((item) => {
+        if (item.CollectionName === this.collectionName.value) {
+          item.Fields = { ...formField };
+        }
+        return item;
+      });
+    }
 
     this.setPage({ offset: 0 });
+
+    this.openTab = 1;
+    this.settingForm.reset();
+
+    this.modal.toggleModal(this.typeSettingModal);
   }
 
   // section: table functions
@@ -363,30 +366,73 @@ export class CreateComponent implements OnInit {
   };
 
   setPage(pageInfo: any) {
-    console.log(pageInfo);
+    // console.log(pageInfo);
     this.page.pageNumber = pageInfo.offset;
     this.page.size = 2;
     this.page.totalElements = 5;
     this.data = this.rawData.slice(this.page.pageNumber * this.page.size);
-    console.log(this.data);
+    // console.log(this.data);
+  }
+
+  onEdit(row: any) {
+    this.isUpdate = true;
+    this.settingForm.patchValue({
+      title: row.Fields.label,
+      placeholder: row.Fields.placeholder,
+      required: row.Fields.validators.some(
+        (validator: any) => validator.name === 'required'
+      ),
+      maxLength: row.Fields.validators.find(
+        (validator: any) => validator.name === 'maxLength'
+      )
+        ? row.Fields.validators.find(
+            (validator: any) => validator.name === 'maxLength'
+          ).value
+        : 0,
+      minLength: row.Fields.validators.find(
+        (validator: any) => validator.name === 'minLength'
+      )
+        ? row.Fields.validators.find(
+            (validator: any) => validator.name === 'minLength'
+          ).value
+        : 0,
+      maxValue: row.Fields.validators.find(
+        (validator: any) => validator.name === 'maxValue'
+      )
+        ? row.Fields.validators.find(
+            (validator: any) => validator.name === 'maxValue'
+          ).value
+        : 0,
+
+      minValue: row.Fields.validators.find(
+        (validator: any) => validator.name === 'minValue'
+      )
+        ? row.Fields.validators.find(
+            (validator: any) => validator.name === 'minValue'
+          ).value
+        : 0,
+      pattern: row.Fields.validators.find(
+        (validator: any) => validator.name === 'pattern'
+      )
+        ? row.Fields.validators.find(
+            (validator: any) => validator.name === 'pattern'
+          ).value
+        : null,
+    });
+
+    this.modal.toggleModal(this.typeSettingModal);
+  }
+
+  onDelete(row: any) {
+    this.rawData = this.rawData.filter((item) => item !== row);
+    this.setPage({ offset: 0 });
   }
 }
 
-/*---------------------------------------------------------------------
-  loop though the form fields and create a form group
-----------------------------------------------------------------------*/
+// let fields = row.Fields;
+// inputFormFields: any = [];
 
-// const formField = {
-//   type: 'text',
-//   control: this.thirdForm.value.title
-//     .split(' ')
-//     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-//     .join(''),
-//   label: this.thirdForm.value.title,
-//   placeholder: this.thirdForm.value.placeholder,
-//   value: '',
-//   validators: validators,
-// };
+// this.inputFormFields = [...this.inputFormFields, fields];
 
 // console.log('form field', formField);
 
@@ -395,52 +441,11 @@ export class CreateComponent implements OnInit {
 // inputFormFields: any = [];
 // this.inputFormFields = [...this.inputFormFields, formField];
 
-//  <!-- validators -->
-
-// let validators: any = [];
-
-// if (this.thirdForm.value.required) {
-//   validators.push({
-//     name: 'required',
-//   });
-// }
-
-// if (this.thirdForm.value.maxLength) {
-//   validators.push({
-//     name: 'maxLength',
-//     value: this.thirdForm.value.maxLength,
-//   });
-// }
-// if (this.thirdForm.value.maxValue) {
-//   validators.push({
-//     name: 'maxValue',
-//     value: this.thirdForm.value.maxValue,
-//   });
-// }
-
-// if (this.thirdForm.value.minLength) {
-//   validators.push({
-//     name: 'minLength',
-//     value: this.thirdForm.value.minLength,
-//   });
-// }
-
-// if (this.thirdForm.value.minValue) {
-//   validators.push({
-//     name: 'minValue',
-//     value: this.thirdForm.value.minValue,
-//   });
-// }
-
-// if (this.thirdForm.value.pattern) {
-//   validators.push({
-//     name: 'pattern',
-//     value: this.thirdForm.value.pattern,
-//   });
-// }
-
-// if (this.selectedType === 'email') {
-//   validators.push({
-//     name: 'email',
-//   });
+// section: function for creating new form collection to add list table
+// onSubmit() {
+//   if (this.newForm.invalid) {
+//     console.log('invalid');
+//     return;
+//   }
+//   console.log(this.newForm.value);
 // }

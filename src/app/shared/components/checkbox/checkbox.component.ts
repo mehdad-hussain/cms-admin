@@ -35,9 +35,14 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit {
   constructor() {}
 
   ngOnInit() {
-    // console.log(this.control.value);
     this.checked = this.control.value;
   }
+
+  ngAfterContentChecked() {
+    this.checked = this.control.value;
+  }
+
+  // when the value changes from the parent component (e.g. form) this method gets called with the new value as a parameter
 
   // Step 4: Define what should happen in this component, if something changes outside
   checked: boolean = false;
