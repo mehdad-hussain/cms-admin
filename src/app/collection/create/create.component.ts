@@ -267,51 +267,19 @@ export class CreateComponent implements OnInit {
       console.log('create form', this.settingForm.value);
     }
 
-    // let objForFieldCreation = { ...this.settingForm.value };
-
     let validators: any = [];
 
-    if (this.settingForm.value.required) {
-      validators.push({
-        name: 'required',
-        value: this.settingForm.value.required,
-      });
-    }
-
-    if (this.settingForm.value.maxLength) {
-      validators.push({
-        name: 'maxLength',
-        value: this.settingForm.value.maxLength,
-      });
-    }
-
-    if (this.settingForm.value.minLength) {
-      validators.push({
-        name: 'minLength',
-        value: this.settingForm.value.minLength,
-      });
-    }
-
-    if (this.settingForm.value.maxValue) {
-      validators.push({
-        name: 'maxValue',
-        value: this.settingForm.value.maxValue,
-      });
-    }
-
-    if (this.settingForm.value.minValue) {
-      validators.push({
-        name: 'minValue',
-        value: this.settingForm.value.minValue,
-      });
-    }
-
-    if (this.settingForm.value.pattern) {
-      validators.push({
-        name: 'pattern',
-        value: this.settingForm.value.pattern,
-      });
-    }
+    Object.keys(this.settingForm.value).forEach((key) => {
+      // console.log(key, this.settingForm.value[key]);
+      if (key !== 'title' && key !== 'placeholder') {
+        if (this.settingForm.value[key]) {
+          validators.push({
+            name: key,
+            value: this.settingForm.value[key],
+          });
+        }
+      }
+    });
 
     if (this.selectedType === 'Email') {
       validators.push({
